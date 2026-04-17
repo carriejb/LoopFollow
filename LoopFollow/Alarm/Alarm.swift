@@ -250,7 +250,24 @@ struct Alarm: Identifiable, Codable, Equatable {
             }
         }()
 
-        AlarmManager.shared.sendNotification(title: type.rawValue, actionTitle: snoozeDuration == 0 ? "Acknowledge" : "Snooze")
+        let notificationSoundName: String?
+
+switch type {
+case .high:
+    notificationSoundName = "High.caf"
+case .fastDrop:
+    notificationSoundName = "Fastdrop.caf"
+case .missedReading:
+    notificationSoundName = "Nodata.caf"
+default:
+    notificationSoundName = nil
+}
+
+AlarmManager.shared.sendNotification(
+    title: type.rawValue,
+    actionTitle: snoozeDuration == 0 ? "Acknowledge" : "Snooze",
+    soundName: notificationSoundName
+)
 
         if playSound {
             AlarmSound.setSoundFile(str: soundFile.rawValue)
