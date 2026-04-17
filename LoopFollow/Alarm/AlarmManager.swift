@@ -176,7 +176,7 @@ class AlarmManager {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     }
 
-    func sendNotification(title: String, actionTitle: String? = nil) {
+    func sendNotification(title: String, actionTitle: String? = nil, soundName: String? = nil) {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
 
         let content = UNMutableNotificationContent()
@@ -185,7 +185,11 @@ class AlarmManager {
         content.subtitle += Observable.shared.directionText.value + " "
         content.subtitle += Observable.shared.deltaText.value
         content.categoryIdentifier = "category"
-        content.sound = .default
+        if let soundName = soundName {
+    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundName))
+} else {
+    content.sound = .default
+}
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
